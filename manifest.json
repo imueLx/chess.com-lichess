@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "Chess.com to Lichess",
+  "version": "1.0.0",
+  "description": "One-click export of your Chess.com games to Lichess for free analysis. Extracts the PGN automatically and opens the Lichess import page.",
+  "homepage_url": "https://github.com/UeIx0/chess.com-to-lichess",
+  "permissions": ["activeTab", "scripting"],
+  "host_permissions": ["https://www.chess.com/*", "https://lichess.org/*"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Analyze on Lichess",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.chess.com/game/*",
+        "https://www.chess.com/live/game/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

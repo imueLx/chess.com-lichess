@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chess.com → Lichess</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <img
+          src="icons/icon48.png"
+          alt=""
+          class="logo-img"
+          width="28"
+          height="28"
+        />
+        <div class="header-text">
+          <h1>Chess.com → Lichess</h1>
+          <span class="version" id="version"></span>
+        </div>
+      </header>
+
+      <div id="status" class="status">
+        Navigate to a Chess.com game to get started.
+      </div>
+
+      <section id="game-info" class="game-info hidden">
+        <div class="players">
+          <div class="player">
+            <span class="piece white-piece">♔</span>
+            <span id="white-player" class="player-name">—</span>
+          </div>
+          <span class="vs">vs</span>
+          <div class="player">
+            <span class="piece black-piece">♚</span>
+            <span id="black-player" class="player-name">—</span>
+          </div>
+        </div>
+        <div class="result-badge" id="result">—</div>
+      </section>
+
+      <div class="actions">
+        <button id="analyze-btn" class="btn btn-primary" disabled>
+          <svg
+            class="btn-svg"
+            viewBox="0 0 24 24"
+            width="18"
+            height="18"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+          </svg>
+          Analyze on Lichess
+        </button>
+
+        <button id="copy-pgn-btn" class="btn btn-secondary hidden">
+          <svg
+            class="btn-svg"
+            viewBox="0 0 24 24"
+            width="16"
+            height="16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+          </svg>
+          Copy PGN
+        </button>
+      </div>
+
+      <footer class="footer">
+        <a
+          href="https://github.com/UeIx0/chess.com-to-lichess"
+          target="_blank"
+          rel="noopener"
+        >
+          Open Source
+        </a>
+        <span class="dot">·</span>
+        <small>Click while on a Chess.com game</small>
+      </footer>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Build / package artifacts
+*.zip
+*.crx
+*.pem
+dist/
+build/
+
+# Logs
+*.log
+npm-debug.log*

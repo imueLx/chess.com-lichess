@@ -1,0 +1,272 @@
+/* =================================================================
+   Chess.com → Lichess  ·  Popup Styles
+   ================================================================= */
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  width: 340px;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu,
+    Cantarell, "Helvetica Neue", sans-serif;
+  background: #121220;
+  color: #d4d4e0;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Container ---------- */
+
+.container {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ---------- Header ---------- */
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.logo-img {
+  border-radius: 6px;
+}
+
+.header-text {
+  display: flex;
+  flex-direction: column;
+}
+
+h1 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.3px;
+  line-height: 1.2;
+}
+
+.version {
+  font-size: 10px;
+  color: #666680;
+  letter-spacing: 0.3px;
+}
+
+/* ---------- Status ---------- */
+
+.status {
+  font-size: 13px;
+  color: #7a7a98;
+  text-align: center;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 10px;
+  transition: all 0.25s ease;
+}
+
+.status.active {
+  color: #66d96a;
+  background: rgba(102, 217, 106, 0.08);
+  border-color: rgba(102, 217, 106, 0.15);
+}
+
+.status.loading {
+  color: #f5a623;
+  background: rgba(245, 166, 35, 0.08);
+  border-color: rgba(245, 166, 35, 0.15);
+}
+
+/* ---------- Game info ---------- */
+
+.game-info {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 10px;
+  padding: 12px 14px;
+  animation: fadeSlideIn 0.25s ease;
+}
+
+.players {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.player {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.piece {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.white-piece {
+  color: #f0f0f0;
+}
+.black-piece {
+  color: #888;
+}
+
+.player-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #e0e0f0;
+  max-width: 110px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vs {
+  font-size: 11px;
+  color: #555570;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.result-badge {
+  margin-top: 8px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: #b0b0cc;
+  letter-spacing: 0.5px;
+}
+
+/* ---------- Buttons ---------- */
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 16px;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  outline: none;
+}
+
+.btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.btn-svg {
+  flex-shrink: 0;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #629924, #7fc42e);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(98, 153, 36, 0.25);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #72ad2a, #8fd43a);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(98, 153, 36, 0.35);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 1px 4px rgba(98, 153, 36, 0.2);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.06);
+  color: #b0b0cc;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  color: #d0d0e8;
+}
+
+/* ---------- Footer ---------- */
+
+.footer {
+  text-align: center;
+  padding-top: 2px;
+  font-size: 11px;
+  color: #44445a;
+}
+
+.footer a {
+  color: #6a6a8a;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.footer a:hover {
+  color: #7fc42e;
+}
+
+.dot {
+  margin: 0 4px;
+}
+
+/* ---------- Utility ---------- */
+
+.hidden {
+  display: none !important;
+}
+
+/* ---------- Animations ---------- */
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Loading spinner */
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
