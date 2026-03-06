@@ -3,7 +3,7 @@
   "name": "Chess.com to Lichess",
   "version": "1.0.0",
   "description": "One-click export of your Chess.com games to Lichess for free analysis. Extracts the PGN automatically and opens the Lichess import page.",
-  "homepage_url": "https://github.com/UeIx0/chess.com-to-lichess",
+  "homepage_url": "https://github.com/imueLx/chess.com-to-lichess",
   "permissions": ["activeTab", "scripting"],
   "host_permissions": ["https://www.chess.com/*", "https://lichess.org/*"],
   "action": {

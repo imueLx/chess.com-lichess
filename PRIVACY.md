@@ -8,11 +8,11 @@ This extension does **not** collect, store, or transmit any personal data.
 
 ## What the extension accesses
 
-| Data | Purpose | Stored? |
-|------|---------|---------|
-| Chess.com game page URL | Detect game pages and extract the game ID | No |
-| PGN (game notation) | Send to Lichess for analysis | No (only passed to the Lichess tab) |
-| Player usernames | Display in the popup UI | No (only shown temporarily) |
+| Data                    | Purpose                                   | Stored?                             |
+| ----------------------- | ----------------------------------------- | ----------------------------------- |
+| Chess.com game page URL | Detect game pages and extract the game ID | No                                  |
+| PGN (game notation)     | Send to Lichess for analysis              | No (only passed to the Lichess tab) |
+| Player usernames        | Display in the popup UI                   | No (only shown temporarily)         |
 
 ## Network requests
 
@@ -25,12 +25,12 @@ No data is sent to any third-party server, analytics service, or tracking platfo
 
 ## Permissions
 
-| Permission | Reason |
-|------------|--------|
-| `activeTab` | Read the current Chess.com tab to extract the PGN |
-| `scripting` | Inject the PGN into the Lichess import page |
-| Host access to `chess.com` | Fetch game data from Chess.com APIs |
-| Host access to `lichess.org` | Auto-fill the PGN on the Lichess paste page |
+| Permission                   | Reason                                            |
+| ---------------------------- | ------------------------------------------------- |
+| `activeTab`                  | Read the current Chess.com tab to extract the PGN |
+| `scripting`                  | Inject the PGN into the Lichess import page       |
+| Host access to `chess.com`   | Fetch game data from Chess.com APIs               |
+| Host access to `lichess.org` | Auto-fill the PGN on the Lichess paste page       |
 
 ## Changes
 
@@ -40,4 +40,4 @@ If this policy is ever updated, the changes will be noted in the [CHANGELOG](CHA
 
 If you have questions, open an issue on [GitHub](https://github.com/UeIx0/chess.com-to-lichess).
 
-*Last updated: March 2026*
+_Last updated: March 2026_
