@@ -29,13 +29,23 @@
       <section id="game-info" class="game-info hidden">
         <div class="players">
           <div class="player">
-            <span class="piece white-piece">♔</span>
-            <span id="white-player" class="player-name">—</span>
+            <span class="piece-badge white-piece" aria-label="White">
+              <span class="piece">♔</span>
+              <span class="piece-side">W</span>
+            </span>
+            <div class="player-meta">
+              <span id="white-player" class="player-name">—</span>
+            </div>
           </div>
           <span class="vs">vs</span>
           <div class="player">
-            <span class="piece black-piece">♚</span>
-            <span id="black-player" class="player-name">—</span>
+            <span class="piece-badge black-piece" aria-label="Black">
+              <span class="piece">♚</span>
+              <span class="piece-side">B</span>
+            </span>
+            <div class="player-meta">
+              <span id="black-player" class="player-name">—</span>
+            </div>
           </div>
         </div>
         <div class="result-badge" id="result">—</div>
@@ -57,6 +67,27 @@
             <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
           </svg>
           Analyze on Lichess
+        </button>
+
+        <button id="refresh-btn" class="btn btn-secondary">
+          <svg
+            class="btn-svg"
+            viewBox="0 0 24 24"
+            width="16"
+            height="16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polyline points="23 4 23 10 17 10" />
+            <polyline points="1 20 1 14 7 14" />
+            <path
+              d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"
+            />
+          </svg>
+          Refresh Game
         </button>
 
         <button id="copy-pgn-btn" class="btn btn-secondary hidden">

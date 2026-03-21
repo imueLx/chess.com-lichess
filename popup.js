@@ -8,13 +8,26 @@
 "use strict";
 
 let cachedPgn = null;
+let activeTabId = null;
+
+const ANALYZE_BUTTON_HTML =
+  '<svg class="btn-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg> Analyze on Lichess';
+const COPY_BUTTON_HTML =
+  '<svg class="btn-svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy PGN';
+const REFRESH_BUTTON_HTML =
+  '<svg class="btn-svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> Refresh Game';
 
 document.addEventListener("DOMContentLoaded", async () => {
   const statusEl = document.getElementById("status");
   const gameInfoEl = document.getElementById("game-info");
   const analyzeBtn = document.getElementById("analyze-btn");
   const copyPgnBtn = document.getElementById("copy-pgn-btn");
+  const refreshBtn = document.getElementById("refresh-btn");
   const versionEl = document.getElementById("version");
+
+  analyzeBtn.innerHTML = ANALYZE_BUTTON_HTML;
+  copyPgnBtn.innerHTML = COPY_BUTTON_HTML;
+  refreshBtn.innerHTML = REFRESH_BUTTON_HTML;
 
   // Show extension version
   const manifest = chrome.runtime.getManifest();
@@ -26,45 +39,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   if (!isChessComGame(url)) {
     statusEl.textContent = "Navigate to a Chess.com game page first.";
+    refreshBtn.disabled = true;
     return;
   }
 
-  statusEl.textContent = "Extracting PGN from game\u2026";
-  statusEl.className = "status loading";
-  analyzeBtn.disabled = true;
+  activeTabId = tab.id;
+  refreshBtn.disabled = false;
 
-  try {
-    const results = await chrome.scripting.executeScript({
-      target: { tabId: tab.id },
-      func: extractPgnFromPage,
-    });
-
-    const data = results?.[0]?.result;
-
-    if (!data || !data.pgn) {
-      throw new Error("Could not extract PGN.");
-    }
-
-    cachedPgn = data.pgn;
-
-    // Update UI
-    statusEl.textContent = "Game found — ready to analyze.";
-    statusEl.className = "status active";
-
-    if (data.white || data.black || data.result) {
-      gameInfoEl.classList.remove("hidden");
-      document.getElementById("white-player").textContent = data.white || "?";
-      document.getElementById("black-player").textContent = data.black || "?";
-      document.getElementById("result").textContent = data.result || "\u2014";
-    }
-
-    analyzeBtn.disabled = false;
-    copyPgnBtn.classList.remove("hidden");
-  } catch {
-    statusEl.textContent =
-      "Could not extract game data. Try reloading the page.";
-    statusEl.className = "status";
-  }
+  await extractAndRender({ retries: 4, delayMs: 900 });
 
   // ---- Analyze on Lichess ----
   analyzeBtn.addEventListener("click", async () => {
@@ -87,8 +69,36 @@ document.addEventListener("DOMContentLoaded", async () => {
       // Tab was still opened even if messaging failed
     } finally {
       analyzeBtn.disabled = false;
-      analyzeBtn.innerHTML =
-        '<svg class="btn-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg> Analyze on Lichess';
+      analyzeBtn.innerHTML = ANALYZE_BUTTON_HTML;
+    }
+  });
+
+  // ---- Refresh game tab + retry extraction ----
+  refreshBtn.addEventListener("click", async () => {
+    if (!activeTabId) return;
+
+    refreshBtn.disabled = true;
+    refreshBtn.innerHTML = '<span class="spinner"></span> Refreshing...';
+    statusEl.textContent = "Reloading game page and retrying extraction...";
+    statusEl.className = "status loading";
+
+    cachedPgn = null;
+    analyzeBtn.disabled = true;
+    copyPgnBtn.classList.add("hidden");
+    gameInfoEl.classList.add("hidden");
+
+    try {
+      await chrome.tabs.reload(activeTabId);
+      await waitForTabComplete(activeTabId, 15000);
+      await delay(500);
+      await extractAndRender({ retries: 8, delayMs: 1000 });
+    } catch {
+      statusEl.textContent =
+        "Refresh completed, but PGN is still unavailable. Wait a few seconds and try Refresh Game again.";
+      statusEl.className = "status";
+    } finally {
+      refreshBtn.innerHTML = REFRESH_BUTTON_HTML;
+      refreshBtn.disabled = false;
     }
   });
 
@@ -99,18 +109,135 @@ document.addEventListener("DOMContentLoaded", async () => {
       await navigator.clipboard.writeText(cachedPgn);
       copyPgnBtn.textContent = "\u2705 Copied!";
       setTimeout(() => {
-        copyPgnBtn.innerHTML =
-          '<svg class="btn-svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy PGN';
+        copyPgnBtn.innerHTML = COPY_BUTTON_HTML;
       }, 2000);
     } catch {
       copyPgnBtn.textContent = "\u274c Failed";
       setTimeout(() => {
-        copyPgnBtn.innerHTML =
-          '<svg class="btn-svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy PGN';
+        copyPgnBtn.innerHTML = COPY_BUTTON_HTML;
       }, 2000);
     }
   });
+
+  async function extractAndRender({ retries = 1, delayMs = 0 } = {}) {
+    statusEl.textContent = "Extracting PGN from game...";
+    statusEl.className = "status loading";
+    analyzeBtn.disabled = true;
+
+    try {
+      const data = await tryExtractPgn(activeTabId, retries, delayMs);
+
+      if (!data || !data.pgn) {
+        throw new Error("Could not extract PGN.");
+      }
+
+      cachedPgn = data.pgn;
+
+      statusEl.textContent = "Game found - ready to analyze.";
+      statusEl.className = "status active";
+
+      if (data.white || data.black || data.result) {
+        gameInfoEl.classList.remove("hidden");
+        document.getElementById("white-player").textContent = data.white || "?";
+        document.getElementById("black-player").textContent = data.black || "?";
+        document.getElementById("result").textContent = formatResultLabel(
+          data.result,
+        );
+      }
+
+      analyzeBtn.disabled = false;
+      copyPgnBtn.classList.remove("hidden");
+      return true;
+    } catch {
+      statusEl.textContent =
+        "PGN not ready yet. Use Refresh Game after the result appears.";
+      statusEl.className = "status";
+      return false;
+    }
+  }
 });
+
+async function tryExtractPgn(tabId, maxAttempts = 1, delayMs = 0) {
+  let lastError = null;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      const results = await chrome.scripting.executeScript({
+        target: { tabId },
+        func: extractPgnFromPage,
+      });
+
+      const data = results?.[0]?.result;
+      if (data?.pgn) {
+        return data;
+      }
+    } catch (err) {
+      lastError = err;
+    }
+
+    if (attempt < maxAttempts) {
+      await delay(delayMs);
+    }
+  }
+
+  if (lastError) throw lastError;
+  return null;
+}
+
+async function waitForTabComplete(tabId, timeoutMs = 10000) {
+  const existing = await chrome.tabs.get(tabId).catch(() => null);
+  if (existing?.status === "complete") return;
+
+  await new Promise((resolve, reject) => {
+    let done = false;
+
+    const timer = setTimeout(() => {
+      cleanup();
+      reject(new Error("Timed out waiting for tab reload."));
+    }, timeoutMs);
+
+    function cleanup() {
+      if (done) return;
+      done = true;
+      clearTimeout(timer);
+      chrome.tabs.onUpdated.removeListener(onUpdated);
+    }
+
+    function onUpdated(updatedTabId, changeInfo) {
+      if (updatedTabId !== tabId) return;
+      if (changeInfo.status === "complete") {
+        cleanup();
+        resolve();
+      }
+    }
+
+    chrome.tabs.onUpdated.addListener(onUpdated);
+  });
+}
+
+function delay(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/**
+ * Convert PGN result text into a compact single score label.
+ *
+ * @param {string|null|undefined} result
+ * @returns {string}
+ */
+function formatResultLabel(result) {
+  switch ((result || "").trim()) {
+    case "1-0":
+      return "Score: 1-0";
+    case "0-1":
+      return "Score: 0-1";
+    case "1/2-1/2":
+    case "½-½":
+      return "Score: 1/2-1/2";
+    default:
+      return "Score: -";
+  }
+}
 
 /* ================================================================= */
 /*  Helper — URL detection                                           */

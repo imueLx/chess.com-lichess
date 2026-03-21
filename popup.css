@@ -100,53 +100,105 @@ h1 {
 .players {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 10px;
+  gap: 4px;
 }
 
 .player {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
 }
 
 .piece {
-  font-size: 18px;
+  font-size: 17px;
   line-height: 1;
 }
 
-.white-piece {
-  color: #f0f0f0;
+.piece-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 3px 6px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  flex-shrink: 0;
 }
+
+.piece-side {
+  display: inline;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1px;
+  text-transform: uppercase;
+}
+
+.white-piece {
+  color: #f8f8ff;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.white-piece .piece-side {
+  color: #f0f0ff;
+}
+
 .black-piece {
-  color: #888;
+  color: #a7a7bf;
+  background: rgba(0, 0, 0, 0.26);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.black-piece .piece-side {
+  color: #b0b0cc;
 }
 
 .player-name {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   color: #e0e0f0;
-  max-width: 110px;
+  text-align: left;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
+}
+
+.player-meta {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0;
+  flex: 1;
+  min-width: 0;
 }
 
 .vs {
-  font-size: 11px;
-  color: #555570;
-  font-weight: 500;
+  align-self: center;
+  font-size: 9px;
+  color: #7a7a98;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.6px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  padding: 1px 6px;
 }
 
 .result-badge {
   margin-top: 8px;
   text-align: center;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
-  color: #b0b0cc;
-  letter-spacing: 0.5px;
+  color: #d8d8ec;
+  letter-spacing: 0.2px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  padding: 4px 8px;
 }
 
 /* ---------- Buttons ---------- */
